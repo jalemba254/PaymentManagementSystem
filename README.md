@@ -1,192 +1,57 @@
-\# Payment Management System
+# Payment Management System
 
+A Java console-based payment management application demonstrating object-oriented programming, payment validation, transaction management, and persistent file storage.
 
+## Developer
+Collins Jalemba
 
-A Java-based console application for managing payment transactions. The project demonstrates object-oriented programming, input validation, file-based persistence, Maven project management, and automated testing with JUnit 5.
+## Features
+- Register customer payments.
+- Generate unique transaction IDs.
+- Validate customer details and payment amounts.
+- Accept M-Pesa, Bank, and Cash payment methods.
+- View all registered payments.
+- Search payments by transaction ID.
+- Update payment status.
+- Generate payment reports.
+- Automatically save and load payment records.
 
+## Project Architecture
 
+| File | Responsibility |
+|---|---|
+| Payment.java | Payment data model |
+| PaymentService.java | Payment operations and business logic |
+| PaymentStorage.java | File storage and retrieval |
+| PaymentManagementSystem.java | Main application and user interface |
 
-\## Features
+## Technologies
+- Java
+- Object-Oriented Programming
+- ArrayList
+- Encapsulation
+- Java Serialization
+- File Handling
 
+## Requirements
+Java Development Kit (JDK).
 
+## How to Run
 
-\- Register customer payments.
+Compile all Java files:
 
-\- Generate unique transaction IDs.
+    javac Payment.java PaymentStorage.java PaymentService.java PaymentManagementSystem.java
 
-\- Support M-Pesa, Bank, and Cash payment methods.
+Run the application:
 
-\- Validate customer names, payment amounts, and payment methods.
+    java PaymentManagementSystem
 
-\- View all recorded payments.
+## Data Storage
 
-\- Search transactions by payment ID.
+Payment records are stored locally in `payments.dat` using Java object serialization.
 
-\- Update payment statuses: PAID, FAILED, and PENDING.
+## Project Status
+Functional educational portfolio project.
 
-\- Generate payment summary reports.
-
-\- Save and load payment records locally.
-
-
-
-\## Technologies
-
-
-
-\- Java 17 compatibility
-
-\- Apache Maven
-
-\- JUnit 5
-
-\- Java Object Serialization
-
-
-
-\## Project Structure
-
-
-
-```text
-
-PaymentManagementSystem/
-
-├── pom.xml
-
-├── README.md
-
-├── .gitignore
-
-└── src/
-
-&#x20;   ├── main/
-
-&#x20;   │   └── java/
-
-&#x20;   │       ├── Payment.java
-
-&#x20;   │       ├── PaymentStorage.java
-
-&#x20;   │       ├── PaymentService.java
-
-&#x20;   │       └── PaymentManagementSystem.java
-
-&#x20;   └── test/
-
-&#x20;       └── java/
-
-&#x20;           └── PaymentServiceTest.java
-
-```
-
-
-
-\## Requirements
-
-
-
-\- JDK 17 or later
-
-\- Apache Maven 3.8 or later
-
-
-
-\## Build the Project
-
-
-
-Run:
-
-
-
-```bash
-
-mvn clean package
-
-```
-
-
-
-\## Run Automated Tests
-
-
-
-Run:
-
-
-
-```bash
-
-mvn clean test
-
-```
-
-
-
-The project currently includes eight automated JUnit tests covering payment registration, validation, transaction ID generation, and payment status updates.
-
-
-
-\## Run the Application
-
-
-
-After building, run:
-
-
-
-```bash
-
-java -cp target/classes PaymentManagementSystem
-
-```
-
-
-
-\## Learning Objectives
-
-
-
-This project demonstrates practical experience with:
-
-
-
-\- Java classes and objects
-
-\- Encapsulation
-
-\- ArrayList collections
-
-\- Input validation
-
-\- Exception handling
-
-\- File handling and serialization
-
-\- Maven dependency management and builds
-
-\- JUnit 5 automated testing
-
-
-
-\## Project Limitations
-
-
-
-This is an educational portfolio project. It does not connect to live M-Pesa, bank APIs, payment gateways, or production databases. Payment records are stored locally using Java serialization.
-
-
-
-\## Author
-
-
-
-\*\*Collins Jalemba\*\*
-
-
-
-GitHub: https://github.com/jalemba254
-
-
-
+## Disclaimer
+This is a learning and demonstration application. It does not process real financial transactions or connect to payment providers.
