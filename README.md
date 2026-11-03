@@ -1,92 +1,301 @@
-\# Payment Management System
 
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.io.*;
 
+public class PaymentManagementSystem {
 
-A Java console-based application for registering, managing, searching, and tracking customer payments.
+    static Scanner scanner = new Scanner(System.in);
+    static ArrayList<Payment> payments = new ArrayList<>();
+    static final String FILE_NAME = "payments.dat";
 
+    static class Payment implements Serializable {
+        private static final long serialVersionUID = 1L;
 
+        String id;
+        String customer;
+        double amount;
+        String method;
+        String status;
+        String date;
 
-\## Developer
+        Payment(String id, String customer, double amount, String method) {
+            this.id = id;
+            this.customer = customer;
+            this.amount = amount;
+            this.method = method;
+            this.status = "PENDING";
+            this.date = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+            );
+        }
+    }
 
-Collins Jalemba
+    public static void main(String[] args) {
 
+        loadPayments();
 
+        boolean running = true;
 
-\## Features
+        while (running) {
+            System.out.println("\n====================================");
+            System.out.println("     PAYMENT MANAGEMENT SYSTEM");
+            System.out.println("====================================");
+            System.out.println("1. Register Payment");
+            System.out.println("2. View All Payments");
+            System.out.println("3. Search Payment");
+            System.out.println("4. Update Payment Status");
+            System.out.println("5. Payment Report");
+            System.out.println("6. Exit");
+            System.out.println("------------------------------------");
+            System.out.print("Select an option: ");
 
-\- Register customer payments.
+            String choice = scanner.nextLine();
 
-\- Generate unique payment transaction IDs.
+            switch (choice) {
+                case "1":
+                    registerPayment();
+                    break;
+                case "2":
+                    viewPayments();
+                    break;
+                case "3":
+                    searchPayment();
+                    break;
+                case "4":
+                    updatePayment();
+                    break;
+                case "5":
+                    paymentReport();
+                    break;
+                case "6":
+                    running = false;
+                    System.out.println("Thank you for using the system.");
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
 
-\- View all registered payments.
+        scanner.close();
+    }
 
-\- Search payments by transaction ID.
+    static void registerPayment() {
 
-\- Update payment status.
+        System.out.println("\n--- REGISTER PAYMENT ---");
 
-\- Generate payment reports.
+        System.out.print("Customer name: ");
+        String customer = scanner.nextLine().trim();
 
-\- Save payment records permanently using Java file serialization.
+        if (customer.isEmpty()) {
+            System.out.println("Customer name is required.");
+            return;
+        }
 
-\- Load saved payment records when the application starts.
+        System.out.print("Payment amount: ");
+        double amount;
 
+        try {
+            amount = Double.parseDouble(scanner.nextLine());
 
+            if (!Double.isFinite(amount) || amount <= 0) {
+                System.out.println("Enter a valid positive amount.");
+                return;
+            }
 
-\## Technologies
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid payment amount.");
+            return;
+        }
 
-\- Java
+        System.out.print("Payment method (M-Pesa, Bank, Cash): ");
+        String method = scanner.nextLine().trim();
 
-\- Object-Oriented Programming (OOP)
+        if (!method.equalsIgnoreCase("M-Pesa")
+                && !method.equalsIgnoreCase("Bank")
+                && !method.equalsIgnoreCase("Cash")) {
 
-\- ArrayList
+            System.out.println("Invalid payment method.");
+            System.out.println("Choose M-Pesa, Bank, or Cash.");
+            return;
+        }
 
-\- Java Serialization
+        String id = String.format(
+            "PAY-%04d", nextPaymentNumber()
+        );
 
-\- File Handling
+        Payment payment = new Payment(id, customer, amount, method);
 
+        payments.add(payment);
+        savePayments();
 
+        System.out.println("\nPayment registered successfully!");
+        System.out.println("Transaction ID: " + id);
+    }
 
-\## Requirements
+    static int nextPaymentNumber() {
 
-\- Java Development Kit (JDK)
+        int highest = 0;
 
+        for (Payment p : payments) {
+            try {
+                int number = Integer.parseInt(p.id.substring(4));
+                highest = Math.max(highest, number);
+            } catch (Exception e) {
+                // Ignore invalid transaction IDs.
+            }
+        }
 
+        return highest + 1;
+    }
 
-\## How to Run
+    static void viewPayments() {
 
+        System.out.println("\n--- ALL PAYMENTS ---");
 
+        if (payments.isEmpty()) {
+            System.out.println("No payments recorded yet.");
+            return;
+        }
 
-1\. Open a terminal in the project folder.
+        for (Payment p : payments) {
+            displayPayment(p);
+        }
+    }
 
-2\. Compile the program:
+    static void searchPayment() {
 
+        System.out.print("\nEnter transaction ID: ");
+        String id = scanner.nextLine().trim();
 
+        for (Payment p : payments) {
+            if (p.id.equalsIgnoreCase(id)) {
+                displayPayment(p);
+                return;
+            }
+        }
 
-&#x20;  javac PaymentManagementSystem.java
+        System.out.println("Transaction not found.");
+    }
 
+    static void updatePayment() {
 
+        System.out.print("\nEnter transaction ID: ");
+        String id = scanner.nextLine().trim();
 
-3\. Run the application:
+        for (Payment p : payments) {
 
+            if (p.id.equalsIgnoreCase(id)) {
 
+                System.out.println("1. Mark as PAID");
+                System.out.println("2. Mark as FAILED");
+                System.out.println("3. Mark as PENDING");
+                System.out.print("Choose status: ");
 
-&#x20;  java PaymentManagementSystem
+                String choice = scanner.nextLine();
 
+                switch (choice) {
+                    case "1":
+                        p.status = "PAID";
+                        break;
+                    case "2":
+                        p.status = "FAILED";
+                        break;
+                    case "3":
+                        p.status = "PENDING";
+                        break;
+                    default:
+                        System.out.println("Invalid status.");
+                        return;
+                }
 
+                savePayments();
+                System.out.println("Payment status updated.");
+                return;
+            }
+        }
 
-\## Data Storage
+        System.out.println("Transaction not found.");
+    }
 
-Payment records are stored locally in `payments.dat`.
+    static void paymentReport() {
 
+        int paid = 0;
+        int pending = 0;
+        int failed = 0;
+        double total = 0;
 
+        for (Payment p : payments) {
 
-\## Project Status
+            if (p.status.equals("PAID")) {
+                paid++;
+                total += p.amount;
+            } else if (p.status.equals("PENDING")) {
+                pending++;
+            } else if (p.status.equals("FAILED")) {
+                failed++;
+            }
+        }
 
-Completed functional learning project.
+        System.out.println("\n--- PAYMENT REPORT ---");
+        System.out.println("Total transactions: " + payments.size());
+        System.out.println("Successful payments: " + paid);
+        System.out.println("Pending payments: " + pending);
+        System.out.println("Failed payments: " + failed);
+        System.out.printf("Total collected: KSh %.2f%n", total);
+    }
 
+    static void displayPayment(Payment p) {
 
+        System.out.println("\n------------------------------");
+        System.out.println("Transaction ID: " + p.id);
+        System.out.println("Customer: " + p.customer);
+        System.out.printf("Amount: KSh %.2f%n", p.amount);
+        System.out.println("Method: " + p.method);
+        System.out.println("Status: " + p.status);
+        System.out.println("Date: " + p.date);
+        System.out.println("------------------------------");
+    }
 
-\## Disclaimer
+    static void savePayments() {
 
-This is an educational demonstration project. It does not process real payments or connect to financial institutions.
+        try (ObjectOutputStream output =
+                 new ObjectOutputStream(
+                     new FileOutputStream(FILE_NAME))) {
 
+            output.writeObject(payments);
+
+        } catch (IOException e) {
+            System.out.println(
+                "Error saving payments: " + e.getMessage()
+            );
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static void loadPayments() {
+
+        File file = new File(FILE_NAME);
+
+        if (!file.exists()) {
+            System.out.println("Starting with a new payment record.");
+            return;
+        }
+
+        try (ObjectInputStream input =
+                 new ObjectInputStream(
+                     new FileInputStream(FILE_NAME))) {
+
+            payments = (ArrayList<Payment>) input.readObject();
+
+            System.out.println("Payment records loaded successfully.");
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(
+                "Error loading payment records: " + e.getMessage()
+            );
+        }
+    }
+}
