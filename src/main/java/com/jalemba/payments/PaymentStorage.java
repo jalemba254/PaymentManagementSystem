@@ -1,3 +1,4 @@
+package com.jalemba.payments;
 
 import java.util.ArrayList;
 import java.io.*;
@@ -36,14 +37,15 @@ public class PaymentStorage {
                  new ObjectInputStream(
                      new FileInputStream(FILE_NAME))) {
 
-            System.out.println("Payment records loaded successfully.");
-
             return (ArrayList<Payment>) input.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
 
             System.out.println(
-                "Error loading payments: " + e.getMessage()
+                "Existing payment data is incompatible with the current version."
+            );
+            System.out.println(
+                "Your original backup remains available."
             );
 
             return new ArrayList<>();

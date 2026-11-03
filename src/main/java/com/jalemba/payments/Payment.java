@@ -1,4 +1,4 @@
-
+package com.jalemba.payments;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +50,11 @@ public class Payment implements Serializable {
         return date;
     }
 
-    public void setStatus(String status) {
+       public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

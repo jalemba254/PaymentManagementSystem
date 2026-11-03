@@ -1,57 +1,83 @@
+
 # Payment Management System
 
-A Java console-based payment management application demonstrating object-oriented programming, payment validation, transaction management, and persistent file storage.
-
-## Developer
-Collins Jalemba
+A Java-based console application for managing customer payments, tracking transactions, and generating payment reports.
 
 ## Features
+
 - Register customer payments.
 - Generate unique transaction IDs.
+- Support M-Pesa, Bank, and Cash payment methods.
 - Validate customer details and payment amounts.
-- Accept M-Pesa, Bank, and Cash payment methods.
-- View all registered payments.
+- View all recorded payments.
 - Search payments by transaction ID.
-- Update payment status.
+- Update payment statuses (PAID, FAILED, PENDING).
 - Generate payment reports.
-- Automatically save and load payment records.
+- Save payment records using Java serialization.
+- Migrate legacy payment records while preserving transaction details.
+- Automated unit testing using JUnit 5.
+- Maven project build and dependency management.
 
-## Project Architecture
+## Project Structure
 
-| File | Responsibility |
-|---|---|
-| Payment.java | Payment data model |
-| PaymentService.java | Payment operations and business logic |
-| PaymentStorage.java | File storage and retrieval |
-| PaymentManagementSystem.java | Main application and user interface |
 
-## Technologies
-- Java
-- Object-Oriented Programming
-- ArrayList
-- Encapsulation
-- Java Serialization
-- File Handling
 
+
+PaymentManagementSystem/
+├── pom.xml
+├── README.md
+├── .gitignore
+└── src/
+    ├── main/
+    │   └── java/
+    │       └── com/
+    │           └── jalemba/
+    │               └── payments/
+    │                   ├── Payment.java
+    │                   ├── PaymentStorage.java
+    │                   ├── PaymentService.java
+    │                   └── PaymentManagementSystem.java
+    └── test/
+        └── java/
+            └── com/
+                └── jalemba/
+                    └── payments/
+                        └── PaymentServiceTest.java
 ## Requirements
-Java Development Kit (JDK).
 
-## How to Run
+- Java JDK 17 or later
+- Apache Maven 3.9 or later
 
-Compile all Java files:
+## Build the Project
 
-    javac Payment.java PaymentStorage.java PaymentService.java PaymentManagementSystem.java
+Run:
 
-Run the application:
+```bash
+mvn clean package
+```
 
-    java PaymentManagementSystem
+## Run the Application
+
+Run:
+
+```bash
+java -cp target/classes com.jalemba.payments.PaymentManagementSystem
+```
+
+## Run Automated Tests
+
+Run:
+
+```bash
+mvn clean test
+```
+
+The project includes JUnit 5 tests covering payment registration, input validation, transaction IDs, and payment status updates.
 
 ## Data Storage
 
-Payment records are stored locally in `payments.dat` using Java object serialization.
+Payment records are stored locally in `payments.dat` using Java serialization.
 
-## Project Status
-Functional educational portfolio project.
+This is an educational demonstration project. It does not connect to live M-Pesa or banking payment gateways.
 
-## Disclaimer
-This is a learning and demonstration application. It does not process real financial transactions or connect to payment providers.
+
